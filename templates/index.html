@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Card Example</title>
+    <style>
+      table {
+        border-collapse: collapse;
+      }
+  
+      th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+      }
+
+      table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        form {
+            display: inline-block;
+        }
+        input[type=text] {
+            width: 130px;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+        }
+        button[type=submit] {
+            width: 80px;
+            background-color: #4c8eaf;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button[type=submit]:hover {
+            background-color: #4c8eaf;
+        }
+
+
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+      <a class="navbar-brand" href="#">My App</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+          <div class="sidebar-sticky">
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link active" href="/">
+                  <span data-feather="home"></span>
+                  Home
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/rekap">
+                  <span data-feather="file"></span>
+                  Rekap
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+        <form action="/" method="get">
+          <label for="search">Search by Date:</label>
+          <input type="text" id="search" name="search" value="{{ search }}" placeholder="YYYY-MM-DD">
+          <button type="submit">Search</button>
+        </form>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+          <div class="row" id="cards"></div>
+          <div class="table-responsive" style="margin-top: 20px;">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Servo Rotation</th>
+                  <th>Detected On</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for result in data['results'] %}
+                <tr>
+                  <td>{{ result['name'] }}</td>
+                  <td>{{ result['servo_rotation'] }}</td>
+                  <td>{{ result['detected_on'] }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var eventSource = new EventSource('/data');
+      eventSource.onmessage = function(event) {
+        var data = JSON.parse(event.data);
+
+        var cards = document.getElementById("cards");
+        cards.innerHTML = "";
+
+        for (var i = 0; i < 3; i++) {
+          var key = Object.keys(data)[i];
+          var value = data[key];
+          var card = `
+            <div class="col-sm-4">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">${key}</h5>
+                  <p class="card-text">${value}</p>
+                </div>
+              </div>
+            </div>
+          `;
+          cards.innerHTML += card;
+        }
+      };
+    </script>
+
+  </body>
+</html>

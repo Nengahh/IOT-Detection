@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rekap Data</title>
+</head>
+<body>
+    <h1>Rekap Data</h1>
+    <form action="{{ url_for('rekap') }}" method="get">
+        <input type="text" name="search" placeholder="Cari berdasarkan waktu...">
+        <button type="submit">Cari</button>
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>Jumlah Penghuni</th>
+                <th>Wajah Tanpa Masker</th>
+                <th>Berdekatan</th>
+                <th>Dengan Masker</th>
+                <th>Waktu</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in data %}
+            <tr>
+                <td>{{ d['Jumlah Penghuni'] }}</td>
+                <td>{{ d['Wajah Tanpa Masker'] }}</td>
+                <td>{{ d['Berdekatan'] }}</td>
+                <td>{{ d['face_with_mask'] }}</td>
+                <td>{{ d['current_time'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
